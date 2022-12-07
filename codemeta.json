@@ -1,0 +1,44 @@
+{
+  "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
+  "@type": "SoftwareSourceCode",
+  "identifier": "popdens",
+  "description": "Population density from Meta's \"Data for Good\" programme.",
+  "name": "popdens: Population density from Meta's \"Data for Good\" programme",
+  "codeRepository": "https://github.com/UrbanAnalyst/popdens",
+  "issueTracker": "https://github.com/UrbanAnalyst/popdens/issues",
+  "license": "https://spdx.org/licenses/GPL-3.0",
+  "version": "0.0.1",
+  "programmingLanguage": {
+    "@type": "ComputerLanguage",
+    "name": "R",
+    "url": "https://r-project.org"
+  },
+  "runtimePlatform": "R version 4.2.2 (2022-10-31)",
+  "author": [
+    {
+      "@type": "Person",
+      "givenName": "Mark",
+      "familyName": "Padgham",
+      "email": "mark.padgham@email.com"
+    }
+  ],
+  "maintainer": [
+    {
+      "@type": "Person",
+      "givenName": "Mark",
+      "familyName": "Padgham",
+      "email": "mark.padgham@email.com"
+    }
+  ],
+  "softwareRequirements": {
+    "1": {
+      "@type": "SoftwareApplication",
+      "identifier": "R",
+      "name": "R",
+      "version": ">= 2.10"
+    },
+    "SystemRequirements": null
+  },
+  "fileSize": "1.695KB",
+  "contIntegration": "https://github.com/UrbanAnalyst/popdens/actions?query=workflow%3AR-CMD-check"
+}
