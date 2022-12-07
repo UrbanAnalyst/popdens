@@ -18,47 +18,33 @@ pop2point <- function (net_sc, geotiff) {
     bb <- t (apply (verts [, c ("x_", "y_")], 2, range))
     ras <- raster::crop (ras, raster::extent (bb))
 
-    nodes <- sf::st_sf (
-        osm_id = verts$vertex_,
-        geometry = xy_to_sfc (verts),
-        crs = 4326
-    )
+    verts_matched <- assign_points (ras, verts)
 
-    nodes_new <- assign_points (ras, nodes)
-
-    return (nodes_new)
+    return (verts_matched)
 }
 
-assign_points <- function (ras, nodes, redistribute_missing = "") {
+assign_points <- function (ras, verts, chunk_size = 10000) {
 
-    pd_sf <- raster::rasterToPolygons (ras) |>
-        sf::st_as_sf ()
+    ras_pts <- raster::rasterToPoints (ras)
 
-    pd_sf$id <- seq_len (nrow (pd_sf))
-    pd_sf <- sf::st_transform (pd_sf, crs = sf::st_crs (nodes))
-    nodes_joined <- sf::st_join (nodes, pd_sf)
+    n <- ceiling (nrow (verts) / chunk_size)
+    verts$index <- rep (seq_len (n), each = chunk_size) [seq_len (nrow (verts))]
+    verts_sp <- split (verts, f = as.factor (verts$index))
 
-    return (nodes_joined)
-}
+    ras_match <- pbapply::pblapply (verts_sp, function (i) {
+        dmat <- geodist::geodist (i, ras_pts, measure = "cheap")
+        apply (dmat, 1, which.min)
+    })
+    ras_match <- unname (unlist (ras_match))
 
+    # Then allocate density estimates equally between all verts which map onto
+    # single raster density points:
+    ras_match_tab <- table (ras_match)
+    ras_match_counts <- ras_match_tab [match (ras_match, names (ras_match_tab))]
 
-#' xy_to_sfc
-#'
-#' Convert matrix of xy points to sfc object
-#'
-#' @param xy matrix, data.frame, or tibble of points
-#' @return sf::sfc representation of same
-#' @export
-xy_to_sfc <- function (xy) {
+    nm <- colnames (ras_pts) [which (!colnames (ras_pts) %in% c ("x", "y"))]
+    verts$index <- NULL
+    verts [[nm]] <- ras_pts [ras_match, 3] / ras_match_counts
 
-    x_ <- y_ <- NULL
-
-    xy <- dplyr::select (xy, c (x_, y_)) |>
-        dplyr::rename (x = x_, y = y_) |>
-        as.matrix ()
-
-    xy_sfc <- sfheaders::sfc_point (xy) |>
-        sf::st_sfc (crs = 4326)
-
-    return (xy_sfc)
+    return (verts)
 }

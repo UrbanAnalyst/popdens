@@ -1,6 +1,6 @@
 Package: popdens
 Title: Population density from Meta's "Data for Good" programme
-Version: 0.0.1.002
+Version: 0.0.1.003
 Authors@R: 
     person(given = "Mark",
            family = "Padgham",
@@ -10,14 +10,11 @@ Description: Population density from Meta's "Data for Good" programme.
 License: GPL-3
 URL: https://github.com/UrbanAnalyst/popdens
 BugReports: https://github.com/UrbanAnalyst/popdens/issues
-Depends: 
-    R (>= 4.1)
 Imports:
     checkmate,
-    dplyr,
-    raster,
-    sf,
-    sfheaders
+    geodist,
+    pbapply,
+    raster
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
