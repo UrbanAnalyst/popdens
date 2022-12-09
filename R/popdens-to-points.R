@@ -11,13 +11,18 @@
 #' @return A \code{data.frame} containing all vertices of 'net_sc', and
 #' corresponding point estimates of population density.
 #' @export
-pop2point <- function (net_sc, geotiff, normalise = TRUE) {
+pop2point <- function (verts, geotiff, normalise = TRUE) {
 
     checkmate::assert_file_exists (geotiff)
 
     ras <- raster::raster (geotiff)
 
-    bb <- t (apply (verts [, c ("x_", "y_")], 2, range))
+    if (all (c ("x_", "y_") %in% names (verts))) {
+        vxy <- verts [, c ("x_", "y_")]
+    } else {
+        vxy <- verts [, c ("x", "y")]
+    }
+    bb <- t (apply (vxy, 2, range))
     ras <- raster::crop (ras, raster::extent (bb))
 
     verts_matched <- assign_points (ras, verts, normalise)
@@ -25,13 +30,11 @@ pop2point <- function (net_sc, geotiff, normalise = TRUE) {
     return (verts_matched)
 }
 
-assign_points <- function (ras, verts, chunk_size = 10000) {
+assign_points <- function (ras, verts, normalise = TRUE) {
 
     ras_pts <- raster::rasterToPoints (ras)
 
-    message ("Calculating 'geodist_min' ...")
     ras_match <- geodist::geodist_min (verts, ras_pts, measure = "cheap")
-    message ("Finished calculating 'geodist_min'")
 
     ras_match_tab <- table (ras_match)
     ras_match_counts <- ras_match_tab [match (ras_match, names (ras_match_tab))]
