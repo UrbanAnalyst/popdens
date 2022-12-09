@@ -31,11 +31,7 @@ assign_points <- function (ras, verts, chunk_size = 10000) {
     verts$index <- rep (seq_len (n), each = chunk_size) [seq_len (nrow (verts))]
     verts_sp <- split (verts, f = as.factor (verts$index))
 
-    ras_match <- pbapply::pblapply (verts_sp, function (i) {
-        dmat <- geodist::geodist (i, ras_pts, measure = "cheap")
-        apply (dmat, 1, which.min)
-    })
-    ras_match <- unname (unlist (ras_match))
+    ras_match <- geodist::geodist_min (verts_sp, ras_pts, measure = "cheap")
 
     # Then allocate density estimates equally between all verts which map onto
     # single raster density points:

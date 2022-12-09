@@ -1,6 +1,6 @@
 Package: popdens
 Title: Population density from Meta's "Data for Good" programme
-Version: 0.0.1.004
+Version: 0.0.1.005
 Authors@R: 
     person(given = "Mark",
            family = "Padgham",
@@ -15,6 +15,8 @@ Imports:
     geodist,
     pbapply,
     raster
+Remotes:
+    hypertidy/geodist
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
