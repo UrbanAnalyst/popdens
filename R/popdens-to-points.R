@@ -36,14 +36,16 @@ assign_points <- function (ras, verts, normalise = TRUE) {
 
     ras_match <- geodist::geodist_min (verts, ras_pts, measure = "cheap")
 
-    ras_match_tab <- table (ras_match)
-    ras_match_counts <- ras_match_tab [match (ras_match, names (ras_match_tab))]
-
     # Then allocate density estimates equally between all verts which map onto
     # single raster density points:
     nm <- colnames (ras_pts) [which (!colnames (ras_pts) %in% c ("x", "y"))]
     verts [[nm]] <- ras_pts [ras_match, 3]
+
     if (normalise) {
+
+        ras_match_tab <- table (ras_match)
+        ras_match_counts <- ras_match_tab [match (ras_match, names (ras_match_tab))]
+
         verts [[nm]] <- verts [[nm]] / ras_match_counts
     }
 
