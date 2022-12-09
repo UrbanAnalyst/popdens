@@ -1,7 +1,9 @@
 #' Assign raster cell population density values to points
 #'
-#' @param net_sc A \pkg{silicate}-class object representing a local street
-#' network, generated with \pkg{dodgr} function, `dodgr_streetnet_sc()`.
+#' @param verts A table of vertices with longitude and latitude coordinates,
+#' such as the "verts" component of a \pkg{silicate}-class object representing a
+#' local street network, generated with \pkg{dodgr} function,
+#' `dodgr_streetnet_sc()`.
 #' @param geotiff Path to 'geotiff' file containing population density
 #' estimates, and including the area defined by 'net_sc'.
 #' @param normalise If `TRUE`, normalise results so such of densities at all
@@ -12,11 +14,9 @@
 pop2point <- function (net_sc, geotiff, normalise = TRUE) {
 
     checkmate::assert_file_exists (geotiff)
-    checkmate::assert_class (net_sc, c ("SC", "osmdata_sc"))
 
     ras <- raster::raster (geotiff)
 
-    verts <- net_sc$vertex
     bb <- t (apply (verts [, c ("x_", "y_")], 2, range))
     ras <- raster::crop (ras, raster::extent (bb))
 

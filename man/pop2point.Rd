@@ -7,14 +7,16 @@
 pop2point(net_sc, geotiff, normalise = TRUE)
 }
 \arguments{
-\item{net_sc}{A \pkg{silicate}-class object representing a local street
-network, generated with \pkg{dodgr} function, \code{dodgr_streetnet_sc()}.}
-
 \item{geotiff}{Path to 'geotiff' file containing population density
 estimates, and including the area defined by 'net_sc'.}
 
 \item{normalise}{If \code{TRUE}, normalise results so such of densities at all
 network vertices is equal to sum of original densities.}
+
+\item{verts}{A table of vertices with longitude and latitude coordinates,
+such as the "verts" component of a \pkg{silicate}-class object representing a
+local street network, generated with \pkg{dodgr} function,
+\code{dodgr_streetnet_sc()}.}
 }
 \value{
 A \code{data.frame} containing all vertices of 'net_sc', and
